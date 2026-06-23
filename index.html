@@ -39,6 +39,7 @@
       <button class="trip-btn small" onclick="generateTrip()">
         🔄 換一個提案
       </button>
+     <button class="trip-btn small outline" onclick="window.location.href='https://www.library.taichung.gov.tw/theme?58'">🏠 回到夏日閱讀主題網</button> 
     </div>
   </div>
 </section>
@@ -88,7 +89,17 @@
   margin-top: 20px;
   padding: 12px 24px;
 }
+.trip-btn.small.outline {
+  background: transparent;
+  color: #6a9a6f;
+  border: 1px solid #6a9a6f;
+  margin-left: 10px; /* 讓兩個小按鈕之間有一點間距 */
+}
 
+.trip-btn.small.outline:hover {
+  background: #6a9a6f;
+  color: #fff;
+}
 .trip-card {
   display: none;
   margin-top: 32px;
