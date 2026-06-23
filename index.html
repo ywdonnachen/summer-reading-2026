@@ -126,6 +126,12 @@
   animation: fadeIn 0.45s ease;
 }
 
+  /* 讓卡片裡的「換一個提案」和「回到主題網」按鈕居中並乖乖排好 */
+.trip-card .trip-btn.small {
+  display: block;       /* 變成區塊元素，才能控制 margin */
+  margin: 12px auto 0;  /* `auto` 負責水平置中，`12px` 是與上方的間距 */
+  width: fit-content;   /* 寬度依文字長度自動決定 */
+}
 .trip-card h2 {
   text-align: center;
   margin-bottom: 28px;
