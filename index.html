@@ -1,5 +1,8 @@
 <section class="reading-trip">
   <div class="reading-trip-wrap">
+    <!-- 新增下面這行 Logo 圖片 -->
+    <img src="你的圖片網址.jpg" alt="活動Logo" class="trip-logo">
+    <h3>🌳 閱讀之森—夏日閱讀探索</h3>
     <h1>🌳 今日閱讀小旅行</h1>
     <p class="intro">
       有時候，我們不是沒有想看的書，<br>
@@ -58,6 +61,19 @@
   text-align: center;
 }
 
+.trip-logo {
+  max-width: 150px;    /* 控制 Logo 的最大寬度，可以依外觀自行調整數字 */
+  height: auto;        /* 讓高度依比例自動縮放，圖片才不會變形 */
+  display: block;      /* 變成區塊元素 */
+  margin: 0 auto 15px; /* `0 auto` 讓圖片在中間置中，`15px` 讓它跟下方的字保持距離 */
+}  
+  
+.reading-trip h3 {
+  font-size: 1.2rem;   /* 控制字體大小 */
+  color: #4d7a52;      /* 改成帶點質感的綠色 */
+  margin-bottom: 8px;  /* 讓它跟下方的大標題保持一點距離 */
+}
+  
 .reading-trip h1 {
   font-size: 2.2rem;
   margin-bottom: 16px;
@@ -122,6 +138,12 @@
   border-radius: 18px;
   padding: 16px 18px;
   margin-bottom: 14px;
+  
+  /* --- 下面這三行是新加的置中語法 --- */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .trip-item span {
