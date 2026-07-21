@@ -39,12 +39,12 @@
 
     let currentImg = null;
     
-    // 照片控制變數
-    let imgScale = 1;
-    let imgX = 100;
-    let imgY = 100;
-    let baseWidth = 1000;
-    let baseHeight = 700;
+    // 照片控制變數（將基準尺寸放大至與相框挖空區域相同，並設定初始縮放填滿）
+    let imgScale = 1.2;
+    let imgX = 0;
+    let imgY = 0;
+    let baseWidth = 1200;
+    let baseHeight = 900;
 
     // 重新繪製畫布的核心函式
     function redraw() {
@@ -53,7 +53,7 @@
       // 1. 如果有上傳照片，根據目前的位移與縮放繪製
       if (currentImg) {
         ctx.save();
-        // 限制照片繪製區域 (可依照你的相框挖空區域調整裁剪範圍)
+        // 限制照片繪製區域 (依照相框挖空區域：x=100, y=100, 寬1000, 高700)
         ctx.beginPath();
         ctx.rect(100, 100, 1000, 700);
         ctx.clip();
@@ -80,10 +80,10 @@
         const img = new Image();
         img.onload = function() {
           currentImg = img;
-          // 初始化圖片位置與預設縮放
-          imgScale = 1;
-          imgX = 100;
-          imgY = 100;
+          // 初始化圖片位置與預設縮放（上傳新照片時自動置中並填滿）
+          imgScale = 1.2;
+          imgX = 0;
+          imgY = 0;
           redraw();
         }
         img.src = event.target.result;
@@ -124,7 +124,6 @@
       e.preventDefault();
 
       const zoomFactor = 1.1;
-      const oldScale = imgScale;
 
       if (e.deltaY < 0) {
         imgScale = Math.min(imgScale * zoomFactor, 5); // 最大放大 5 倍
