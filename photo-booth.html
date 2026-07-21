@@ -39,33 +39,33 @@
 
     let currentImg = null;
     
-    // 照片控制變數 (預設鋪滿整個 1200x900 畫面讓使用者自由調整)
+    // 照片控制變數
     let imgScale = 1;
     let imgX = 0;
     let imgY = 0;
-    let baseWidth = 1200;
-    let baseHeight = 900;
+    let imgDrawWidth = 1200;
+    let imgDrawHeight = 900;
 
     // 重新繪製畫布的核心函式
     function redraw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. 先畫上傳的照片在底層（隨著使用者的縮放與拖曳改變位置）
+      // 1. 先畫上傳的照片在底層（維持等比例）
       if (currentImg) {
         ctx.save();
-        const w = baseWidth * imgScale;
-        const h = baseHeight * imgScale;
+        const w = imgDrawWidth * imgScale;
+        const h = imgDrawHeight * imgScale;
         ctx.drawImage(currentImg, imgX, imgY, w, h);
         ctx.restore();
       }
 
-      // 2. 再把拍貼機透明外框蓋在最上層（不規則挖空處會自動透出底下的照片）
+      // 2. 再把拍貼機透明外框蓋在最上層
       if (frame.complete) {
         ctx.drawImage(frame, 0, 0, 1200, 900);
       }
     }
 
-    // 讀取上傳的圖片
+    // 讀取上傳的圖片（自動計算等比例尺寸，預設完整包覆畫面）
     upload.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -75,12 +75,26 @@
         const img = new Image();
         img.onload = function() {
           currentImg = img;
-          // 初始化圖片位置與預設縮放
+          
+          // 計算等比例寬高，讓圖片初始時能完美覆蓋 1200x900 區域
+          const canvasAspect = canvas.width / canvas.height;
+          const imgAspect = img.width / img.height;
+
+          if (imgAspect > canvasAspect) {
+            // 圖片比較寬，以高度 900 為主，等比例縮放寬度
+            imgDrawHeight = canvas.height;
+            imgDrawWidth = canvas.height * imgAspect;
+            imgX = (canvas.width - imgDrawWidth) / 2; // 置中
+            imgY = 0;
+          } else {
+            // 圖片比較高，以寬度 1200 為主，等比例縮放高度
+            imgDrawWidth = canvas.width;
+            imgDrawHeight = canvas.width / imgAspect;
+            imgX = 0;
+            imgY = (canvas.height - imgDrawHeight) / 2; // 置中
+          }
+
           imgScale = 1;
-          imgX = 0;
-          imgY = 0;
-          baseWidth = canvas.width;
-          baseHeight = canvas.height;
           redraw();
         }
         img.src = event.target.result;
