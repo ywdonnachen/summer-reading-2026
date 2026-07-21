@@ -39,8 +39,8 @@
 
     let currentImg = null;
     
-    // 照片控制變數（將基準尺寸放大至與相框挖空區域相同，並設定初始縮放填滿）
-    let imgScale = 1.2;
+    // 照片控制變數 (預設鋪滿整個 1200x900 畫面讓使用者自由調整)
+    let imgScale = 1;
     let imgX = 0;
     let imgY = 0;
     let baseWidth = 1200;
@@ -50,21 +50,16 @@
     function redraw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. 如果有上傳照片，根據目前的位移與縮放繪製
+      // 1. 先畫上傳的照片在底層（隨著使用者的縮放與拖曳改變位置）
       if (currentImg) {
         ctx.save();
-        // 限制照片繪製區域 (依照相框挖空區域：x=100, y=100, 寬1000, 高700)
-        ctx.beginPath();
-        ctx.rect(100, 100, 1000, 700);
-        ctx.clip();
-
         const w = baseWidth * imgScale;
         const h = baseHeight * imgScale;
         ctx.drawImage(currentImg, imgX, imgY, w, h);
         ctx.restore();
       }
 
-      // 2. 畫上拍貼機透明外框
+      // 2. 再把拍貼機透明外框蓋在最上層（不規則挖空處會自動透出底下的照片）
       if (frame.complete) {
         ctx.drawImage(frame, 0, 0, 1200, 900);
       }
@@ -80,10 +75,12 @@
         const img = new Image();
         img.onload = function() {
           currentImg = img;
-          // 初始化圖片位置與預設縮放（上傳新照片時自動置中並填滿）
-          imgScale = 1.2;
+          // 初始化圖片位置與預設縮放
+          imgScale = 1;
           imgX = 0;
           imgY = 0;
+          baseWidth = canvas.width;
+          baseHeight = canvas.height;
           redraw();
         }
         img.src = event.target.result;
