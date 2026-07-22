@@ -5,42 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>夏日閱讀探索拍貼機</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background-color: #faf8f5; padding: 20px; }
-        #canvas-container { margin: 20px auto; border: 1px solid #ccc; max-width: 100%; }
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            /* 夏日暖陽與夕陽感的溫馨漸層背景 */
+            background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
+            padding: 20px; 
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #d97706; /* 溫暖的橘棕閱讀色調 */
+            letter-spacing: 1.5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #665c54;
+            margin-bottom: 20px;
+        }
+
+        #canvas-container { 
+            margin: 20px auto; 
+            max-width: 100%; 
+        }
+
+        /* 拍立得拍貼機外框風格 */
         canvas { 
             max-width: 100%; 
             height: auto; 
             touch-action: none; /* 防止手機滑動時整個網頁跟著上下滾動 */
             cursor: grab;
+            background-color: #ffffff;
+            padding: 12px 12px 45px 12px; /* 下方留白營造拍立得底片感 */
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.12); /* 帶點暖色調的柔和陰影 */
+            border: 1px solid #f0e6d6;
         }
         canvas:active { cursor: grabbing; }
-        .controls { margin-top: 20px; }
 
-        /* 放大並美化下載按鈕 */
+        .controls { 
+            margin-top: 25px; 
+        }
+
+        /* 放大並美化下載按鈕（改為更搭夏日主題的暖橘色） */
         .controls button {
             font-size: 1.25rem;   /* 放大字體 */
-            padding: 12px 28px;  /* 增加按鈕上下左右的內距，讓按鈕變大好按 */
-            background-color: #4CAF50; /* 綠色背景（可依喜好更改） */
+            padding: 12px 28px;  /* 增加按鈕內距，好按易點 */
+            background-color: #f59e0b; /* 夏日暖陽橘色 */
             color: white;        /* 文字顏色 */
             border: none;        /* 移除預設框線 */
             border-radius: 8px;  /* 圓角 */
             cursor: pointer;     /* 滑鼠移上去變手指圖示 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 加上點立體陰影 */
-            transition: background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2); /* 立體陰影 */
+            transition: background-color 0.2s, transform 0.1s;
         }
 
         .controls button:hover {
-            background-color: #45a049; /* 滑鼠移上去時顏色變深一點 */
+            background-color: #d97706; /* 滑鼠移上去時顏色變深 */
+            transform: translateY(-1px);
+        }
+
+        .controls button:active {
+            transform: translateY(1px);
+        }
+
+        /* 上傳檔案按鈕的小巧思 */
+        input[type="file"] {
+            padding: 10px;
+            background: #fff;
+            border: 1px dashed #d97706;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #665c54;
         }
     </style>
 </head>
 <body>
-  <h1>夏日閱讀探索</h1>
-  <p>上傳一張照片，可利用滑鼠或手指進行縮放與拖曳調整</p>
+
+  <h1>☀️ 夏日閱讀探索 📖</h1>
+  <p>上傳一張照片，打造你的專屬夏日拍貼機（可利用滑鼠或手指進行縮放與拖曳）</p>
+  
   <input type="file" id="upload" accept="image/*">
   <br><br>
   
   <canvas id="canvas" width="1200" height="900"></canvas>
+  
   <div class="controls">
     <button onclick="downloadImage()">下載成品</button>
   </div>
