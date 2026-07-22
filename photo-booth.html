@@ -5,30 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>夏日閱讀探索拍貼機</title>
     <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            /* 夏日暖陽與夕陽感的溫馨漸層背景 */
-            background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
-            padding: 20px;
-            min-height: 100vh;
+        /* 採用夏日閱讀小旅行的自然綠意與清新色調風格 */
+        html, body {
             margin: 0;
+            padding: 0;
+            background: #f4f8ec;
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            color: #2f4633;
+            text-align: center;
+        }
+
+        .booth-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px;
             box-sizing: border-box;
         }
+
+        /* Logo 樣式 */
+        .trip-logo {
+            display: block;       
+            margin: 0 auto 15px;  
+            width: 180px;         
+            height: auto;         
+        } 
+
+        h3 {
+            font-size: 1.2rem;   
+            color: #4d7a52;      
+            margin-bottom: 8px;  
+        }
+
         h1 {
-            color: #d97706; /* 溫暖的橘棕閱讀色調 */
-            letter-spacing: 1.5px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
-            margin-bottom: 8px;
+            font-size: 2.2rem;
+            color: #3f6b45;
+            margin-top: 0;
+            margin-bottom: 12px;
         }
-        p {
-            color: #665c54;
-            margin-bottom: 20px;
+
+        .intro {
+            line-height: 1.9;
+            color: #5d705f;
+            margin-bottom: 24px;
         }
+
         #canvas-container {
             margin: 20px auto;
             max-width: 100%;
         }
+
         /* 拍立得拍貼機外框風格 */
         canvas {
             max-width: 100%;
@@ -37,75 +62,122 @@
             cursor: grab;
             background-color: #ffffff;
             padding: 12px 12px 45px 12px; /* 下方留白營造拍立得底片感 */
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.12); /* 帶點暖色調的柔和陰影 */
-            border: 1px solid #f0e6d6;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2ebd5;
         }
+
         canvas:active {
             cursor: grabbing;
         }
+
         .controls {
             margin-top: 25px;
             display: flex;
             justify-content: center;
-            gap: 15px; /* 按鈕之間的間距 */
+            gap: 12px;
             flex-wrap: wrap;
         }
-        /* 按鈕共用樣式 */
-        .controls button {
-            font-size: 1.25rem;   /* 放大字體 */
-            padding: 12px 28px;  /* 增加按鈕內距，好按易點 */
-            color: white;        /* 文字顏色 */
-            border: none;        /* 移除預設框線 */
-            border-radius: 8px;  /* 圓角 */
-            cursor: pointer;     /* 滑鼠移上去變手指圖示 */
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        /* 下載按鈕（夏日暖陽橘色） */
-        .btn-download {
-            background-color: #f59e0b;
-            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
-        }
-        .btn-download:hover {
-            background-color: #d97706;
-            transform: translateY(-1px);
-        }
-        /* 返回主題網按鈕（文青灰棕色） */
-        .btn-back {
-            background-color: #665c54;
-            box-shadow: 0 4px 6px rgba(102, 92, 84, 0.2);
-        }
-        .btn-back:hover {
-            background-color: #514942;
-            transform: translateY(-1px);
-        }
-        .controls button:active {
-            transform: translateY(1px);
-        }
-        /* 上傳檔案按鈕的小巧思 */
-        input[type="file"] {
-            padding: 10px;
-            background: #fff;
-            border: 1px dashed #d97706;
-            border-radius: 8px;
+
+        /* 按鈕樣式（對齊主題網的設計） */
+        .trip-btn {
+            background: #6a9a6f;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 14px 28px;
+            font-size: 1rem;
             cursor: pointer;
-            color: #665c54;
+            transition: 0.25s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(106, 154, 111, 0.2);
+        }
+
+        .trip-btn:hover {
+            transform: translateY(-2px);
+            background: #587f5d;
+        }
+
+        .trip-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 外框樣式按鈕 */
+        .trip-btn.outline {
+            background: transparent;
+            color: #6a9a6f;
+            border: 1px solid #6a9a6f;
+            box-shadow: none;
+        }
+
+        .trip-btn.outline:hover {
+            background: #6a9a6f;
+            color: #fff;
+        }
+
+        /* 上傳檔案按鈕外觀美化 */
+        input[type="file"] {
+            padding: 12px 20px;
+            background: #fff;
+            border: 2px dashed #6a9a6f;
+            border-radius: 999px;
+            cursor: pointer;
+            color: #4d7a52;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        input[type="file"]:hover {
+            background: #f9fbf4;
+        }
+
+        /* RWD 手機版響應式微調 */
+        @media (max-width: 600px) {
+            .booth-container {
+                padding: 36px 16px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .trip-btn {
+                width: 100%;
+                max-width: 280px;
+                box-sizing: border-box;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>☀️ 夏日閱讀探索拍貼機 📖</h1>
-    <p>上傳一張照片，打造你的專屬夏日拍貼（可利用滑鼠或手指進行縮放與拖曳）</p>
+    <div class="booth-container">
+        <!-- 導入主題網的 Logo -->
+        <img class="trip-logo" src="https://www.library.taichung.gov.tw/images/logo.svg" alt="台中圖書館 Logo">
+        
+        <h3>🌳 閱讀之森—夏日閱讀探索</h3>
+        <h1>📸 夏日閱讀拍貼機</h1>
+        <p class="intro">
+            上傳一張照片，打造你的專屬夏日閱讀拍貼。<br>
+            （可利用滑鼠或手機觸控進行縮放與拖曳）
+        </p>
 
-    <input type="file" id="upload" accept="image/*">
-    <br><br>
+        <input type="file" id="upload" accept="image/*">
+        <br><br>
 
-    <canvas id="canvas" width="1200" height="900"></canvas>
+        <div id="canvas-container">
+            <canvas id="canvas" width="1200" height="900"></canvas>
+        </div>
 
-    <div class="controls">
-        <button class="btn-download" onclick="downloadImage()">下載成品</button>
-        <button class="btn-back" onclick="location.href='https://ywdonnachen.github.io/summer-reading-2026/'">回到夏日閱讀主題網</button>
+        <div class="controls">
+            <button class="trip-btn" onclick="downloadImage()">📥 下載成品</button>
+            <button class="trip-btn outline" onclick="window.location.href='https://ywdonnachen.github.io/summer-reading-2026/'">🏠 回到夏日閱讀主題網</button>
+        </div>
     </div>
 
     <script>
@@ -159,17 +231,15 @@
                     const imgAspect = img.width / img.height;
 
                     if (imgAspect > canvasAspect) {
-                        // 圖片比較寬，以高度 900 為主，等比例縮放寬度
                         imgDrawHeight = canvas.height;
                         imgDrawWidth = canvas.height * imgAspect;
-                        imgX = (canvas.width - imgDrawWidth) / 2; // 置中
+                        imgX = (canvas.width - imgDrawWidth) / 2;
                         imgY = 0;
                     } else {
-                        // 圖片比較高，以寬度 1200 為主，等比例縮放高度
                         imgDrawWidth = canvas.width;
                         imgDrawHeight = canvas.width / imgAspect;
                         imgX = 0;
-                        imgY = (canvas.height - imgDrawHeight) / 2; // 置中
+                        imgY = (canvas.height - imgDrawHeight) / 2;
                     }
 
                     imgScale = 1;
@@ -186,7 +256,6 @@
         let startY = 0;
         let initialPinchDistance = null;
 
-        // 電腦滑鼠：按下開始拖曳
         canvas.addEventListener('mousedown', (e) => {
             if (!currentImg) return;
             isDragging = true;
@@ -194,7 +263,6 @@
             startY = e.clientY - imgY;
         });
 
-        // 電腦滑鼠：移動中
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             imgX = e.clientX - startX;
@@ -202,25 +270,22 @@
             redraw();
         });
 
-        // 電腦滑鼠：放開結束拖曳
         window.addEventListener('mouseup', () => {
             isDragging = false;
         });
 
-        // 電腦滑鼠：滾輪縮放
         canvas.addEventListener('wheel', (e) => {
             if (!currentImg) return;
             e.preventDefault();
             const zoomFactor = 1.1;
             if (e.deltaY < 0) {
-                imgScale = Math.min(imgScale * zoomFactor, 5); // 最大放大 5 倍
+                imgScale = Math.min(imgScale * zoomFactor, 5);
             } else {
-                imgScale = Math.max(imgScale / zoomFactor, 0.2); // 最小縮小 0.2 倍
+                imgScale = Math.max(imgScale / zoomFactor, 0.2);
             }
             redraw();
         }, { passive: false });
 
-        // --- 手機觸控支援 ---
         canvas.addEventListener('touchstart', (e) => {
             if (!currentImg) return;
             if (e.touches.length === 1) {
@@ -262,7 +327,7 @@
 
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = 'my-summer-photo.png';
+            link.download = 'my-summer-reading-photo.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
