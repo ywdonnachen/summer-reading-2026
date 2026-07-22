@@ -15,6 +15,23 @@
         }
         canvas:active { cursor: grabbing; }
         .controls { margin-top: 20px; }
+
+        /* 放大並美化下載按鈕 */
+        .controls button {
+            font-size: 1.25rem;   /* 放大字體 */
+            padding: 12px 28px;  /* 增加按鈕上下左右的內距，讓按鈕變大好按 */
+            background-color: #4CAF50; /* 綠色背景（可依喜好更改） */
+            color: white;        /* 文字顏色 */
+            border: none;        /* 移除預設框線 */
+            border-radius: 8px;  /* 圓角 */
+            cursor: pointer;     /* 滑鼠移上去變手指圖示 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 加上點立體陰影 */
+            transition: background-color 0.2s;
+        }
+
+        .controls button:hover {
+            background-color: #45a049; /* 滑鼠移上去時顏色變深一點 */
+        }
     </style>
 </head>
 <body>
