@@ -5,38 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>夏日閱讀探索拍貼機</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            text-align: center; 
+        body {
+            font-family: sans-serif;
+            text-align: center;
             /* 夏日暖陽與夕陽感的溫馨漸層背景 */
             background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
-            padding: 20px; 
+            padding: 20px;
             min-height: 100vh;
             margin: 0;
             box-sizing: border-box;
         }
-
         h1 {
             color: #d97706; /* 溫暖的橘棕閱讀色調 */
             letter-spacing: 1.5px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
             margin-bottom: 8px;
         }
-
         p {
             color: #665c54;
             margin-bottom: 20px;
         }
-
-        #canvas-container { 
-            margin: 20px auto; 
-            max-width: 100%; 
+        #canvas-container {
+            margin: 20px auto;
+            max-width: 100%;
         }
-
         /* 拍立得拍貼機外框風格 */
-        canvas { 
-            max-width: 100%; 
-            height: auto; 
+        canvas {
+            max-width: 100%;
+            height: auto;
             touch-action: none; /* 防止手機滑動時整個網頁跟著上下滾動 */
             cursor: grab;
             background-color: #ffffff;
@@ -45,34 +41,47 @@
             box-shadow: 0 10px 25px rgba(217, 119, 6, 0.12); /* 帶點暖色調的柔和陰影 */
             border: 1px solid #f0e6d6;
         }
-        canvas:active { cursor: grabbing; }
-
-        .controls { 
-            margin-top: 25px; 
+        canvas:active {
+            cursor: grabbing;
         }
-
-        /* 放大並美化下載按鈕（改為更搭夏日主題的暖橘色） */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* 按鈕之間的間距 */
+            flex-wrap: wrap;
+        }
+        /* 按鈕共用樣式 */
         .controls button {
             font-size: 1.25rem;   /* 放大字體 */
             padding: 12px 28px;  /* 增加按鈕內距，好按易點 */
-            background-color: #f59e0b; /* 夏日暖陽橘色 */
             color: white;        /* 文字顏色 */
             border: none;        /* 移除預設框線 */
             border-radius: 8px;  /* 圓角 */
             cursor: pointer;     /* 滑鼠移上去變手指圖示 */
-            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2); /* 立體陰影 */
             transition: background-color 0.2s, transform 0.1s;
         }
-
-        .controls button:hover {
-            background-color: #d97706; /* 滑鼠移上去時顏色變深 */
+        /* 下載按鈕（夏日暖陽橘色） */
+        .btn-download {
+            background-color: #f59e0b;
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+        }
+        .btn-download:hover {
+            background-color: #d97706;
             transform: translateY(-1px);
         }
-
+        /* 返回主題網按鈕（文青灰棕色） */
+        .btn-back {
+            background-color: #665c54;
+            box-shadow: 0 4px 6px rgba(102, 92, 84, 0.2);
+        }
+        .btn-back:hover {
+            background-color: #514942;
+            transform: translateY(-1px);
+        }
         .controls button:active {
             transform: translateY(1px);
         }
-
         /* 上傳檔案按鈕的小巧思 */
         input[type="file"] {
             padding: 10px;
@@ -86,181 +95,178 @@
 </head>
 <body>
 
-  <h1>☀️ 夏日閱讀探索拍貼機 📖</h1>
-  <p>上傳一張照片，打造你的專屬夏日拍貼（可利用滑鼠或手指進行縮放與拖曳）</p>
-  
-  <input type="file" id="upload" accept="image/*">
-  <br><br>
-  
-  <canvas id="canvas" width="1200" height="900"></canvas>
-  
-  <div class="controls">
-    <button onclick="downloadImage()">下載成品</button>
-  </div>
+    <h1>☀️ 夏日閱讀探索拍貼機 📖</h1>
+    <p>上傳一張照片，打造你的專屬夏日拍貼（可利用滑鼠或手指進行縮放與拖曳）</p>
 
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const upload = document.getElementById('upload');
-    
-    const frame = new Image();
-    frame.src = 'frame.png'; 
-    frame.onload = () => redraw(); // 等框框載入後先畫一次
+    <input type="file" id="upload" accept="image/*">
+    <br><br>
 
-    let currentImg = null;
-    
-    // 照片控制變數
-    let imgScale = 1;
-    let imgX = 0;
-    let imgY = 0;
-    let imgDrawWidth = 1200;
-    let imgDrawHeight = 900;
+    <canvas id="canvas" width="1200" height="900"></canvas>
 
-    // 重新繪製畫布的核心函式
-    function redraw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    <div class="controls">
+        <button class="btn-download" onclick="downloadImage()">下載成品</button>
+        <button class="btn-back" onclick="location.href='https://ywdonnachen.github.io/summer-reading-2026/'">回到夏日閱讀主題網</button>
+    </div>
 
-      // 1. 先畫上傳的照片在底層（維持等比例）
-      if (currentImg) {
-        ctx.save();
-        const w = imgDrawWidth * imgScale;
-        const h = imgDrawHeight * imgScale;
-        ctx.drawImage(currentImg, imgX, imgY, w, h);
-        ctx.restore();
-      }
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const upload = document.getElementById('upload');
+        
+        const frame = new Image();
+        frame.src = 'frame.png';
+        frame.onload = () => redraw(); // 等框框載入後先畫一次
 
-      // 2. 再把拍貼機透明外框蓋在最上層
-      if (frame.complete) {
-        ctx.drawImage(frame, 0, 0, 1200, 900);
-      }
-    }
+        let currentImg = null; // 照片控制變數
+        let imgScale = 1;
+        let imgX = 0;
+        let imgY = 0;
+        let imgDrawWidth = 1200;
+        let imgDrawHeight = 900;
 
-    // 讀取上傳的圖片（自動計算等比例尺寸，預設完整包覆畫面）
-    upload.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+        // 重新繪製畫布的核心函式
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = new Image();
-        img.onload = function() {
-          currentImg = img;
-          
-          // 計算等比例寬高，讓圖片初始時能完美覆蓋 1200x900 區域
-          const canvasAspect = canvas.width / canvas.height;
-          const imgAspect = img.width / img.height;
+            // 1. 先畫上傳的照片在底層（維持等比例）
+            if (currentImg) {
+                ctx.save();
+                const w = imgDrawWidth * imgScale;
+                const h = imgDrawHeight * imgScale;
+                ctx.drawImage(currentImg, imgX, imgY, w, h);
+                ctx.restore();
+            }
 
-          if (imgAspect > canvasAspect) {
-            // 圖片比較寬，以高度 900 為主，等比例縮放寬度
-            imgDrawHeight = canvas.height;
-            imgDrawWidth = canvas.height * imgAspect;
-            imgX = (canvas.width - imgDrawWidth) / 2; // 置中
-            imgY = 0;
-          } else {
-            // 圖片比較高，以寬度 1200 為主，等比例縮放高度
-            imgDrawWidth = canvas.width;
-            imgDrawHeight = canvas.width / imgAspect;
-            imgX = 0;
-            imgY = (canvas.height - imgDrawHeight) / 2; // 置中
-          }
-
-          imgScale = 1;
-          redraw();
+            // 2. 再把拍貼機透明外框蓋在最上層
+            if (frame.complete) {
+                ctx.drawImage(frame, 0, 0, 1200, 900);
+            }
         }
-        img.src = event.target.result;
-      }
-      reader.readAsDataURL(file);
-    });
 
-    // --- 互動控制：滑鼠與觸控事件 ---
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let initialPinchDistance = null;
+        // 讀取上傳的圖片（自動計算等比例尺寸，預設完整包覆畫面）
+        upload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-    // 電腦滑鼠：按下開始拖曳
-    canvas.addEventListener('mousedown', (e) => {
-      if (!currentImg) return;
-      isDragging = true;
-      startX = e.clientX - imgX;
-      startY = e.clientY - imgY;
-    });
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    currentImg = img;
+                    
+                    // 計算等比例寬高，讓圖片初始時能完美覆蓋 1200x900 區域
+                    const canvasAspect = canvas.width / canvas.height;
+                    const imgAspect = img.width / img.height;
 
-    // 電腦滑鼠：移動中
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      imgX = e.clientX - startX;
-      imgY = e.clientY - startY;
-      redraw();
-    });
+                    if (imgAspect > canvasAspect) {
+                        // 圖片比較寬，以高度 900 為主，等比例縮放寬度
+                        imgDrawHeight = canvas.height;
+                        imgDrawWidth = canvas.height * imgAspect;
+                        imgX = (canvas.width - imgDrawWidth) / 2; // 置中
+                        imgY = 0;
+                    } else {
+                        // 圖片比較高，以寬度 1200 為主，等比例縮放高度
+                        imgDrawWidth = canvas.width;
+                        imgDrawHeight = canvas.width / imgAspect;
+                        imgX = 0;
+                        imgY = (canvas.height - imgDrawHeight) / 2; // 置中
+                    }
 
-    // 電腦滑鼠：放開結束拖曳
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
+                    imgScale = 1;
+                    redraw();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
 
-    // 電腦滑鼠：滾輪縮放
-    canvas.addEventListener('wheel', (e) => {
-      if (!currentImg) return;
-      e.preventDefault();
+        // --- 互動控制：滑鼠與觸控事件 ---
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let initialPinchDistance = null;
 
-      const zoomFactor = 1.1;
+        // 電腦滑鼠：按下開始拖曳
+        canvas.addEventListener('mousedown', (e) => {
+            if (!currentImg) return;
+            isDragging = true;
+            startX = e.clientX - imgX;
+            startY = e.clientY - imgY;
+        });
 
-      if (e.deltaY < 0) {
-        imgScale = Math.min(imgScale * zoomFactor, 5); // 最大放大 5 倍
-      } else {
-        imgScale = Math.max(imgScale / zoomFactor, 0.2); // 最小縮小 0.2 倍
-      }
+        // 電腦滑鼠：移動中
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            imgX = e.clientX - startX;
+            imgY = e.clientY - startY;
+            redraw();
+        });
 
-      redraw();
-    }, { passive: false });
+        // 電腦滑鼠：放開結束拖曳
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
 
-    // --- 手機觸控支援 ---
-    canvas.addEventListener('touchstart', (e) => {
-      if (!currentImg) return;
-      if (e.touches.length === 1) {
-        isDragging = true;
-        startX = e.touches[0].clientX - imgX;
-        startY = e.touches[0].clientY - imgY;
-      } else if (e.touches.length === 2) {
-        isDragging = false;
-        initialPinchDistance = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-      }
-    });
+        // 電腦滑鼠：滾輪縮放
+        canvas.addEventListener('wheel', (e) => {
+            if (!currentImg) return;
+            e.preventDefault();
+            const zoomFactor = 1.1;
+            if (e.deltaY < 0) {
+                imgScale = Math.min(imgScale * zoomFactor, 5); // 最大放大 5 倍
+            } else {
+                imgScale = Math.max(imgScale / zoomFactor, 0.2); // 最小縮小 0.2 倍
+            }
+            redraw();
+        }, { passive: false });
 
-    canvas.addEventListener('touchmove', (e) => {
-      if (!currentImg) return;
-      if (e.touches.length === 1 && isDragging) {
-        imgX = e.touches[0].clientX - startX;
-        imgY = e.touches[0].clientY - startY;
-        redraw();
-      } else if (e.touches.length === 2 && initialPinchDistance) {
-        e.preventDefault();
-        const currentDistance = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        const factor = currentDistance / initialPinchDistance;
-        imgScale = Math.min(Math.max(imgScale * (factor > 1 ? 1.02 : 0.98), 0.2), 5);
-        initialPinchDistance = currentDistance;
-        redraw();
-      }
-    }, { passive: false });
+        // --- 手機觸控支援 ---
+        canvas.addEventListener('touchstart', (e) => {
+            if (!currentImg) return;
+            if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - imgX;
+                startY = e.touches[0].clientY - imgY;
+            } else if (e.touches.length === 2) {
+                isDragging = false;
+                initialPinchDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            }
+        });
 
-    canvas.addEventListener('touchend', () => {
-      isDragging = false;
-      initialPinchDistance = null;
-    });
+        canvas.addEventListener('touchmove', (e) => {
+            if (!currentImg) return;
+            if (e.touches.length === 1 && isDragging) {
+                imgX = e.touches[0].clientX - startX;
+                imgY = e.touches[0].clientY - startY;
+                redraw();
+            } else if (e.touches.length === 2 && initialPinchDistance) {
+                e.preventDefault();
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                const factor = currentDistance / initialPinchDistance;
+                imgScale = Math.min(Math.max(imgScale * (factor > 1 ? 1.02 : 0.98), 0.2), 5);
+                initialPinchDistance = currentDistance;
+                redraw();
+            }
+        }, { passive: false });
 
-    function downloadImage() {
-      const link = document.createElement('a');
-      link.download = 'my-summer-photo.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-  </script>
+        canvas.addEventListener('touchend', () => {
+            isDragging = false;
+            initialPinchDistance = null;
+        });
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'my-summer-photo.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+
 </body>
 </html>
